@@ -4,78 +4,79 @@ from rest_framework.exceptions import PermissionDenied
 from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
-from ..models.mango import Mango
-from ..serializers import MangoSerializer
+from ..models.course import Course
+from ..serializers import CourseSerializer
 
 # Create your views here.
-class MangosView(generics.ListCreateAPIView):
+class CourseView(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
-    serializer_class = MangoSerializer
+    serializer_class = CourseSerializer
+
     def get(self, request):
         """Index request"""
         # Get all the mangos:
         # mangos = Mango.objects.all()
         # Filter the mangos by owner, so you can only see your owned mangos
-        mangos = Mango.objects.filter(owner=request.user.id)
+        courses = Course.objects.filter(owner=request.user.id)
         # Run the data through the serializer
-        data = MangoSerializer(mangos, many=True).data
-        return Response({ 'mangos': data })
+        serializer = CourseSerializer(courses, many=True).data
+        return Response({ 'courses': serializer })
 
     def post(self, request):
         """Create request"""
         # Add user to request data object
-        request.data['mango']['owner'] = request.user.id
+        request.data['course']['owner'] = request.user.id
         # Serialize/create mango
-        mango = MangoSerializer(data=request.data['mango'])
+        serializer = CourseSerializer(data=request.data['course'])
         # If the mango data is valid according to our serializer...
-        if mango.is_valid():
+        if serializer.is_valid():
             # Save the created mango & send a response
-            mango.save()
-            return Response({ 'mango': mango.data }, status=status.HTTP_201_CREATED)
+            serializer.save()
+            return Response({ 'course': serializer.data }, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
-        return Response(mango.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class MangoDetailView(generics.RetrieveUpdateDestroyAPIView):
+class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
         """Show request"""
         # Locate the mango to show
-        mango = get_object_or_404(Mango, pk=pk)
+        course = get_object_or_404(Course, pk=pk)
         # Only want to show owned mangos?
-        if request.user != mango.owner:
+        if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
 
         # Run the data through the serializer so it's formatted
-        data = MangoSerializer(mango).data
-        return Response({ 'mango': data })
+        serializer = CourseSerializer(course).data
+        return Response({'course': serializer})
 
     def delete(self, request, pk):
         """Delete request"""
         # Locate mango to delete
-        mango = get_object_or_404(Mango, pk=pk)
+        course = get_object_or_404(Course, pk=pk)
         # Check the mango's owner against the user making this request
-        if request.user != mango.owner:
+        if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
         # Only delete if the user owns the  mango
-        mango.delete()
+        course.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     def partial_update(self, request, pk):
         """Update Request"""
         # Locate Mango
         # get_object_or_404 returns a object representation of our Mango
-        mango = get_object_or_404(Mango, pk=pk)
+        course = get_object_or_404(Course, pk=pk)
         # Check the mango's owner against the user making this request
-        if request.user != mango.owner:
+        if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
 
         # Ensure the owner field is set to the current user's ID
-        request.data['mango']['owner'] = request.user.id
+        request.data['course']['owner'] = request.user.id
         # Validate updates with serializer
-        data = MangoSerializer(mango, data=request.data['mango'], partial=True)
-        if data.is_valid():
+        serializer = CourseSerializer(course, data=request.data['course'], partial=True)
+        if serializer.is_valid():
             # Save & send a 204 no content
-            data.save()
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            serializer.save()
+            return Response({'course': serializer.data})
         # If the data is not valid, return a response with the errors
-        return Response(data.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
