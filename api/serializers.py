@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
 from .models.course import Course
+from .models.module import Module
 from .models.user import User
 
 
@@ -9,6 +10,11 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = '__all__'
+
+class ModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Module
+        fields = ('id', 'course', 'name', 'content')
 
 class UserSerializer(serializers.ModelSerializer):
     # This model serializer will be used for User creation
@@ -20,10 +26,15 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id', 'email', 'password', 'first_name', 'last_name')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
+        first_name = serializers.CharField(max_length=100)
+        last_name = serializers.CharField(max_length=100)
 
     # This create method will be used for model creation
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
+
+    def update(self, validated_data):
+        return get_user_model().objects.partial_update(**validated_data)
 
 
 class UserRegisterSerializer(serializers.Serializer):
@@ -51,3 +62,8 @@ class ChangePasswordSerializer(serializers.Serializer):
     model = get_user_model()
     old = serializers.CharField(required=True)
     new = serializers.CharField(required=True)
+
+class UpdateProfileSerializer(serializers.Serializer):
+    model = get_user_model()
+    firstName = serializers.CharField(max_length=100)
+    lastName = serializers.CharField(max_length=100)

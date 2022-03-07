@@ -1,26 +1,26 @@
 from django.db import models
-from django.contrib.auth import get_user_model
 
 # Create your models here.
-class Course(models.Model):
+
+class Module(models.Model):
   # define fields
   # https://docs.djangoproject.com/en/3.2/ref/models/fields/
-  name = models.CharField(max_length=100)
-  description = models.CharField(max_length=255)
-  owner = models.ForeignKey(
-      get_user_model(),
+  course = models.ForeignKey(
+      'course',
       on_delete=models.CASCADE
   )
+  name = models.CharField(max_length=100)
+  content = models.CharField(max_length=255)
 
   def __str__(self):
     # This must return a string
-    return f"{self.name} by {self.owner}."
+    return f"{self.name} in {self.course}"
 
   def as_dict(self):
     """Returns dictionary version of Mango models"""
     return {
         'id': self.id,
+        'course': self.course,
         'name': self.name,
-        'description': self.description,
-        'owner': self.owner
+        'content': self.content,
     }

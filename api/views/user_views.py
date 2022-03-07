@@ -5,7 +5,7 @@ from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user, authenticate, login, logout
 
-from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
+from ..serializers import UserSerializer, UserRegisterSerializer, ChangePasswordSerializer, UpdateProfileSerializer
 from ..models.user import User
 
 class SignUpView(generics.CreateAPIView):
@@ -45,7 +45,6 @@ class SignInView(generics.CreateAPIView):
 
     def post(self, request):
         creds = request.data['credentials']
-        print(creds)
         # We can pass our email and password along with the request to the
         # `authenticate` method. If we had used the default user, we would need
         # to send the `username` instead of `email`.
@@ -96,3 +95,14 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateProfileView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+
+    # def partial_update(self, request):
+
+    def get(self, request):
+        """Show request"""
+        user = request.user
+        return Response({ 'user.id': user.id, 'user.email': user.email, 'user.first_name': user.first_name, 'user.last_name': user.last_name})
