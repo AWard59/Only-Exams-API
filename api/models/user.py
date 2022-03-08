@@ -27,7 +27,6 @@ class UserManager(BaseUserManager):
         # in Python refers to the extra keyword arguments that are passed into
         # a function (meaning these are key=value pairs).
         user = self.model(email=self.normalize_email(email), **extra_fields)
-
         # Use the set_password method to hash the password
         user.set_password(password)
         # Call save to save the user to the database
@@ -61,9 +60,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
     first_name = models.CharField(max_length=100, default='')
     last_name = models.CharField(max_length=100, default='')
-    is_author = models.BooleanField(default=False)
+    is_student = models.BooleanField(default=False)
     is_tutor = models.BooleanField(default=False)
-    is_student = models.BooleanField(default=True)
+    is_author = models.BooleanField(default=False)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

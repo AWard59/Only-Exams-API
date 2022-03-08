@@ -24,7 +24,7 @@ class UserSerializer(serializers.ModelSerializer):
         # get_user_model will get the user model (this is required)
         # https://docs.djangoproject.com/en/3.2/topics/auth/customizing/#referencing-the-user-model
         model = get_user_model()
-        fields = ('id', 'email', 'password', 'first_name', 'last_name')
+        fields = ('id', 'email', 'password', 'first_name', 'last_name', 'is_student', 'is_tutor', 'is_author')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
         first_name = serializers.CharField(max_length=100)
         last_name = serializers.CharField(max_length=100)
@@ -43,6 +43,9 @@ class UserRegisterSerializer(serializers.Serializer):
     password = serializers.CharField(required=True)
     password_confirmation = serializers.CharField(
         required=True, write_only=True)
+    is_student = serializers.BooleanField(required=True)
+    is_tutor = serializers.BooleanField(required=True)
+    is_author = serializers.BooleanField(required=True)
 
     def validate(self, data):
         # Ensure password & password_confirmation exist
@@ -65,5 +68,5 @@ class ChangePasswordSerializer(serializers.Serializer):
 
 class UpdateProfileSerializer(serializers.Serializer):
     model = get_user_model()
-    firstName = serializers.CharField(max_length=100)
-    lastName = serializers.CharField(max_length=100)
+    first_name = serializers.CharField(max_length=100)
+    last_name = serializers.CharField(max_length=100)

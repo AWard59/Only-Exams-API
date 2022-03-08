@@ -16,7 +16,16 @@ class UserAdmin(BaseUserAdmin):
     # fieldset including the list of fields.
     # Below we're saying create 4 sections, the first section has no name specified
     fieldsets = (
-      (None, {'fields': ('email', 'password')}),
+      (None, {'fields': ('email', 'password', 'first_name', 'last_name')}),
+      ('User Type',
+          {
+              'fields': (
+                  'is_student',
+                  'is_tutor',
+                  'is_author',
+              )
+          }
+      ),
       ('Permissions',
           {
               'fields': (

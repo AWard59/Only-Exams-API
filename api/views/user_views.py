@@ -19,12 +19,24 @@ class SignUpView(generics.CreateAPIView):
 
     def post(self, request):
         # Pass the request data to the serializer to validate it
+        if (request.data['userType'] == 'is_student'):
+            request.data['credentials']['is_student'] = True
+            request.data['credentials']['is_tutor'] = False
+            request.data['credentials']['is_author'] = False
+        elif (request.data['userType'] == 'is_tutor'):
+            request.data['credentials']['is_tutor'] = True
+            request.data['credentials']['is_student'] = False
+            request.data['credentials']['is_author'] = False
+        elif (request.data['userType'] == 'is_author'):
+            request.data['credentials']['is_author'] = True
+            request.data['credentials']['is_student'] = False
+            request.data['credentials']['is_tutor'] = False
+
         user = UserRegisterSerializer(data=request.data['credentials'])
         # If that data is in the correct format...
         if user.is_valid():
             # Actually create the user using the UserSerializer (the `create` method defined there)
             created_user = UserSerializer(data=user.data)
-
             if created_user.is_valid():
                 # Save the user and send back a response!
                 created_user.save()
@@ -60,7 +72,10 @@ class SignInView(generics.CreateAPIView):
                     'user': {
                         'id': user.id,
                         'email': user.email,
-                        'token': user.get_auth_token()
+                        'token': user.get_auth_token(),
+                        'isAuthor': user.is_author,
+                        'isTutor': user.is_tutor,
+                        'isStudent': user.is_student
                     }
                 })
             else:
