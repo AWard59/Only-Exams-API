@@ -1,9 +1,11 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
+
 from .models.user import User
 from .models.course import Course
 from .models.module import Module
+from .models.assigned_tutors import Assigned_Tutor
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
@@ -51,3 +53,4 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Course)
 admin.site.register(Module)
+admin.site.register(Assigned_Tutor)

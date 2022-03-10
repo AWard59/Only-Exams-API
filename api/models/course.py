@@ -11,6 +11,7 @@ class Course(models.Model):
       get_user_model(),
       on_delete=models.CASCADE
   )
+  assigned_tutors = models.ManyToManyField('User', through='Assigned_Tutor', through_fields=('course', 'tutor'), related_name='assigned_tutors', blank=True)
 
   def __str__(self):
     # This must return a string

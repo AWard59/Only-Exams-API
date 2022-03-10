@@ -5,7 +5,7 @@ from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user, authenticate, login, logout
 
-from ..serializers import UserSerializer, UserRegisterSerializer, ChangePasswordSerializer, UpdateProfileSerializer
+from ..serializers import UserSerializer, UserRegisterSerializer, ChangePasswordSerializer, UpdateProfileSerializer, TutorSerializer
 from ..models.user import User
 
 class SignUpView(generics.CreateAPIView):
@@ -121,3 +121,15 @@ class UpdateProfileView(generics.UpdateAPIView):
         """Show request"""
         user = request.user
         return Response({ 'user.id': user.id, 'user.email': user.email, 'user.first_name': user.first_name, 'user.last_name': user.last_name})
+
+class TutorView(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+
+    def get(self, request):
+        """Index request"""
+        tutors = User.objects.filter(is_tutor=True)
+        # Run the data through the serializer
+        serializer = TutorSerializer(tutors, many=True).data
+        print('serializer', serializer)
+        return Response({'tutors': serializer})
