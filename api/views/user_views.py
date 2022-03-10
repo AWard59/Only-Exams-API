@@ -5,7 +5,7 @@ from rest_framework import status, generics
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user, authenticate, login, logout
 
-from ..serializers import UserSerializer, UserRegisterSerializer,  ChangePasswordSerializer
+from ..serializers import UserSerializer, UserRegisterSerializer, ChangePasswordSerializer, UpdateProfileSerializer
 from ..models.user import User
 
 class SignUpView(generics.CreateAPIView):
@@ -19,12 +19,24 @@ class SignUpView(generics.CreateAPIView):
 
     def post(self, request):
         # Pass the request data to the serializer to validate it
+        if (request.data['userType'] == 'is_student'):
+            request.data['credentials']['is_student'] = True
+            request.data['credentials']['is_tutor'] = False
+            request.data['credentials']['is_author'] = False
+        elif (request.data['userType'] == 'is_tutor'):
+            request.data['credentials']['is_tutor'] = True
+            request.data['credentials']['is_student'] = False
+            request.data['credentials']['is_author'] = False
+        elif (request.data['userType'] == 'is_author'):
+            request.data['credentials']['is_author'] = True
+            request.data['credentials']['is_student'] = False
+            request.data['credentials']['is_tutor'] = False
+
         user = UserRegisterSerializer(data=request.data['credentials'])
         # If that data is in the correct format...
         if user.is_valid():
             # Actually create the user using the UserSerializer (the `create` method defined there)
             created_user = UserSerializer(data=user.data)
-
             if created_user.is_valid():
                 # Save the user and send back a response!
                 created_user.save()
@@ -45,7 +57,6 @@ class SignInView(generics.CreateAPIView):
 
     def post(self, request):
         creds = request.data['credentials']
-        print(creds)
         # We can pass our email and password along with the request to the
         # `authenticate` method. If we had used the default user, we would need
         # to send the `username` instead of `email`.
@@ -61,7 +72,10 @@ class SignInView(generics.CreateAPIView):
                     'user': {
                         'id': user.id,
                         'email': user.email,
-                        'token': user.get_auth_token()
+                        'token': user.get_auth_token(),
+                        'isAuthor': user.is_author,
+                        'isTutor': user.is_tutor,
+                        'isStudent': user.is_student
                     }
                 })
             else:
@@ -96,3 +110,14 @@ class ChangePasswordView(generics.UpdateAPIView):
             return Response(status=status.HTTP_204_NO_CONTENT)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class UpdateProfileView(generics.UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = UserSerializer
+
+    # def partial_update(self, request):
+
+    def get(self, request):
+        """Show request"""
+        user = request.user
+        return Response({ 'user.id': user.id, 'user.email': user.email, 'user.first_name': user.first_name, 'user.last_name': user.last_name})
