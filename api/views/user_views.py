@@ -131,5 +131,4 @@ class TutorView(generics.ListCreateAPIView):
         tutors = User.objects.filter(is_tutor=True)
         # Run the data through the serializer
         serializer = TutorSerializer(tutors, many=True).data
-        print('serializer', serializer)
         return Response({'tutors': serializer})

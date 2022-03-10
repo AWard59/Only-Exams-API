@@ -12,6 +12,9 @@ class CourseSerializer(serializers.ModelSerializer):
         model = Course
         fields = '__all__'
 
+class CourseAssignedTutorsSerializer(CourseSerializer):
+  tutors = CourseSerializer(read_only=True, many=True)
+
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
@@ -76,14 +79,14 @@ class AssignedTutorSerializer(serializers.ModelSerializer):
       model = Assigned_Tutor
       fields = '__all__'
 
-class AssignedTutorReadSerializer(serializers.ModelSerializer):
-    course = CourseSerializer
-    tutor = UserSerializer
-    class Meta:
-      model = Assigned_Tutor
-      fields = ['id', 'course', 'tutor']
-
 class TutorSerializer(serializers.ModelSerializer):
     class Meta:
       model = User
       fields = ('email', 'id')
+
+class AssignedTutorReadSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+    tutor = TutorSerializer()
+    class Meta:
+      model = Assigned_Tutor
+      fields = ['id', 'course', 'tutor']

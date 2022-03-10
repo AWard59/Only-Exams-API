@@ -64,7 +64,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_tutor = models.BooleanField(default=False)
     is_author = models.BooleanField(default=False)
 
-    assigned_course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='users', blank=True, null=True)
+    # assigned_course = models.ForeignKey('Course', on_delete=models.CASCADE, related_name='users', blank=True, null=True)
 
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

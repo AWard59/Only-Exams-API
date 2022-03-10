@@ -13,22 +13,21 @@ class AssignedTutorsView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = AssignedTutorSerializer
 
-    def get(self, request):
+    def get(self, request, pk):
         """Index request"""
-        assigned_tutors = Assigned_Tutor.objects.all()
+        assigned_tutors = Assigned_Tutor.objects.filter(course=pk)
         serializer = AssignedTutorReadSerializer(
             assigned_tutors, many=True).data
         return Response({'assigned_tutors': serializer})
 
     def post(self, request):
         """Create request"""
-        serializer = AssignedTutorSerializer(data=request.data)
-        # If the mango data is valid according to our serializer...
+        print('req', request.data['assign'])
+        serializer = AssignedTutorSerializer(data=request.data['assign'])
+        print('serializer', serializer)
         if serializer.is_valid():
-            # Save the created mango & send a response
             serializer.save()
             return Response({'assigned_tutors': serializer.data}, status=status.HTTP_201_CREATED)
-        # If the data is not valid, return a response with the errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
