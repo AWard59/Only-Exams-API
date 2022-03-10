@@ -38,22 +38,13 @@ class ModuleDetailView(generics.RetrieveUpdateDestroyAPIView):
         """Show request"""
         # Locate the mango to show
         module = get_object_or_404(Module, pk=pk)
-        # Only want to show owned mangos?
-        if request.user != module.owner:
-            raise PermissionDenied('Unauthorized, you do not own this mango')
-
-        # Run the data through the serializer so it's formatted
-        serializer = CourseSerializer(module).data
+        serializer = ModuleSerializer(module).data
         return Response({'module': serializer})
 
     def delete(self, request, pk):
         """Delete request"""
         # Locate mango to delete
         module = get_object_or_404(Module, pk=pk)
-        # Check the mango's owner against the user making this request
-        if request.user != module.owner:
-            raise PermissionDenied('Unauthorized, you do not own this mango')
-        # Only delete if the user owns the  mango
         module.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -62,17 +53,9 @@ class ModuleDetailView(generics.RetrieveUpdateDestroyAPIView):
         # Locate Mango
         # get_object_or_404 returns a object representation of our Mango
         module = get_object_or_404(Module, pk=pk)
-        # Check the mango's owner against the user making this request
-        if request.user != module.owner:
-            raise PermissionDenied('Unauthorized, you do not own this mango')
-
-        # Ensure the owner field is set to the current user's ID
-        request.data['module']['owner'] = request.user.id
         # Validate updates with serializer
-        serializer = CourseSerializer(
-            module, data=request.data['module'], partial=True)
+        serializer = ModuleSerializer(module, data=request.data['module'], partial=True)
         if serializer.is_valid():
-            # Save & send a 204 no content
             serializer.save()
             return Response({'module': serializer.data})
         # If the data is not valid, return a response with the errors

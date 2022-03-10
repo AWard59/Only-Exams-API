@@ -4,6 +4,7 @@ from rest_framework import serializers
 from .models.course import Course
 from .models.module import Module
 from .models.user import User
+from .models.assigned_tutors import Assigned_Tutor
 
 
 class CourseSerializer(serializers.ModelSerializer):
@@ -60,7 +61,6 @@ class UserRegisterSerializer(serializers.Serializer):
         # if all is well, return the data
         return data
 
-
 class ChangePasswordSerializer(serializers.Serializer):
     model = get_user_model()
     old = serializers.CharField(required=True)
@@ -70,3 +70,20 @@ class UpdateProfileSerializer(serializers.Serializer):
     model = get_user_model()
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
+
+class AssignedTutorSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = Assigned_Tutor
+      fields = '__all__'
+
+class AssignedTutorReadSerializer(serializers.ModelSerializer):
+    course = CourseSerializer
+    tutor = UserSerializer
+    class Meta:
+      model = Assigned_Tutor
+      fields = ['id', 'course', 'tutor']
+
+class TutorSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = User
+      fields = ('email', 'id')
