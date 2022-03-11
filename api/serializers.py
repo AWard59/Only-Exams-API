@@ -5,8 +5,9 @@ from .models.course import Course
 from .models.module import Module
 from .models.user import User
 from .models.assigned_tutors import Assigned_Tutor
+from .models.enrolled_course import Enrolled_Course
 
-
+# Course Serializers
 class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
@@ -15,11 +16,13 @@ class CourseSerializer(serializers.ModelSerializer):
 class CourseAssignedTutorsSerializer(CourseSerializer):
   tutors = CourseSerializer(read_only=True, many=True)
 
+# Module Serializer
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
         fields = ('id', 'course', 'name', 'content')
 
+# User Serializers
 class UserSerializer(serializers.ModelSerializer):
     # This model serializer will be used for User creation
     # The login serializer also inherits from this serializer
@@ -39,7 +42,6 @@ class UserSerializer(serializers.ModelSerializer):
 
     def update(self, validated_data):
         return get_user_model().objects.partial_update(**validated_data)
-
 
 class UserRegisterSerializer(serializers.Serializer):
     # Require email, password, and password_confirmation for sign up
@@ -74,15 +76,16 @@ class UpdateProfileSerializer(serializers.Serializer):
     first_name = serializers.CharField(max_length=100)
     last_name = serializers.CharField(max_length=100)
 
-class AssignedTutorSerializer(serializers.ModelSerializer):
-    class Meta:
-      model = Assigned_Tutor
-      fields = '__all__'
-
+# Assign Tutor Serializers
 class TutorSerializer(serializers.ModelSerializer):
     class Meta:
       model = User
       fields = ('email', 'id')
+
+class AssignedTutorSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = Assigned_Tutor
+      fields = '__all__'
 
 class AssignedTutorReadSerializer(serializers.ModelSerializer):
     course = CourseSerializer()
@@ -90,3 +93,21 @@ class AssignedTutorReadSerializer(serializers.ModelSerializer):
     class Meta:
       model = Assigned_Tutor
       fields = ['id', 'course', 'tutor']
+
+# Enrol Course Serializers
+class StudentSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = User
+      fields = ('email', 'id')
+
+class EnrolledCourseSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = Enrolled_Course
+      fields = '__all__'
+
+class EnrolledCourseReadSerializer(serializers.ModelSerializer):
+    course = CourseSerializer()
+    student = StudentSerializer()
+    class Meta:
+      model = Enrolled_Course
+      fields = ['id', 'course', 'student']

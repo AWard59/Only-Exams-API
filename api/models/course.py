@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 from .assigned_tutors import Assigned_Tutor
+from .enrolled_course import Enrolled_Course
 
 # Create your models here.
 class Course(models.Model):
@@ -14,6 +15,8 @@ class Course(models.Model):
       on_delete=models.CASCADE
   )
   assigned_tutors = models.ManyToManyField('User', through=Assigned_Tutor, through_fields=('course', 'tutor'), related_name='tutors', blank=True)
+
+  enrolled_courses = models.ManyToManyField('User', through=Enrolled_Course, through_fields=('course', 'student'), related_name='students', blank=True)
 
   def __str__(self):
     # This must return a string
