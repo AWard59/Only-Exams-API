@@ -21,7 +21,6 @@ class EnrolledCourseView(generics.ListCreateAPIView):
     def post(self, request, pk):
         """Create request"""
         serializer = EnrolledCourseSerializer(data=request.data['enrol'])
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response({'enrolled_courses': serializer.data}, status=status.HTTP_201_CREATED)

@@ -24,7 +24,6 @@ class ModuleView(generics.ListCreateAPIView):
     def post(self, request, pk):
         """Create request"""
         serializer = ModuleSerializer(data=request.data['module'])
-        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response({'module': serializer.data}, status=status.HTTP_201_CREATED)

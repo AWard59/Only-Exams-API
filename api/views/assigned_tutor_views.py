@@ -22,9 +22,7 @@ class AssignedTutorsView(generics.ListCreateAPIView):
 
     def post(self, request):
         """Create request"""
-        print('req', request.data['assign'])
         serializer = AssignedTutorSerializer(data=request.data['assign'])
-        print('serializer', serializer)
         if serializer.is_valid():
             serializer.save()
             return Response({'assigned_tutors': serializer.data}, status=status.HTTP_201_CREATED)
