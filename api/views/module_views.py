@@ -21,7 +21,7 @@ class ModuleView(generics.ListCreateAPIView):
         serializer = ModuleSerializer(modules, many=True).data
         return Response({'modules': serializer})
 
-    def post(self, request, pk):
+    def post(self, request):
         """Create request"""
         serializer = ModuleSerializer(data=request.data['module'])
         if serializer.is_valid():
