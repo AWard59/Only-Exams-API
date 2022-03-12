@@ -1,5 +1,7 @@
 from django.db import models
 
+from .completed_module import Completed_Module
+
 # Create your models here.
 
 class Module(models.Model):
@@ -10,7 +12,10 @@ class Module(models.Model):
       on_delete=models.CASCADE
   )
   name = models.CharField(max_length=100)
-  content = models.CharField(max_length=255)
+  content = models.TextField()
+
+  completed_module = models.ManyToManyField('User', through=Completed_Module, through_fields=(
+      'module_complete', 'student'), related_name='module_students', blank=True)
 
   def __str__(self):
     # This must return a string

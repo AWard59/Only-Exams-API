@@ -7,6 +7,7 @@ from .models.course import Course
 from .models.module import Module
 from .models.assigned_tutors import Assigned_Tutor
 from .models.enrolled_course import Enrolled_Course
+from .models.completed_module import Completed_Module
 
 class UserAdmin(BaseUserAdmin):
     ordering = ['id']
@@ -56,3 +57,4 @@ admin.site.register(Course)
 admin.site.register(Module)
 admin.site.register(Assigned_Tutor)
 admin.site.register(Enrolled_Course)
+admin.site.register(Completed_Module)

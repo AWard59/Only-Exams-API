@@ -24,6 +24,7 @@ class ModuleView(generics.ListCreateAPIView):
     def post(self, request, pk):
         """Create request"""
         serializer = ModuleSerializer(data=request.data['module'])
+        print(serializer)
         if serializer.is_valid():
             serializer.save()
             return Response({'module': serializer.data}, status=status.HTTP_201_CREATED)
@@ -34,12 +35,12 @@ class ModuleView(generics.ListCreateAPIView):
 class ModuleDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
 
-    # def get(self, request, pk):
-    #     """Show request"""
-    #     # Locate the mango to show
-    #     module = get_object_or_404(Module, pk=pk)
-    #     serializer = ModuleSerializer(module).data
-    #     return Response({'module': serializer})
+    def get(self, request, pk):
+        """Show request"""
+        # Locate the mango to show
+        module = get_object_or_404(Module, pk=pk)
+        serializer = ModuleSerializer(module).data
+        return Response({'module': serializer})
 
     # def delete(self, request, pk):
     #     """Delete request"""

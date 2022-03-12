@@ -6,6 +6,7 @@ from .models.module import Module
 from .models.user import User
 from .models.assigned_tutors import Assigned_Tutor
 from .models.enrolled_course import Enrolled_Course
+from .models.completed_module import Completed_Module
 
 # Course Serializers
 class CourseSerializer(serializers.ModelSerializer):
@@ -98,7 +99,7 @@ class AssignedTutorReadSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
       model = User
-      fields = ('email', 'id')
+      fields = ['id']
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,4 +111,22 @@ class EnrolledCourseReadSerializer(serializers.ModelSerializer):
     student = StudentSerializer()
     class Meta:
       model = Enrolled_Course
-      fields = ['id', 'course', 'student']
+      fields = ['course', 'student']
+
+# Completed Module Serializers
+class CompletedModuleSerializer(serializers.ModelSerializer):
+    class Meta:
+      model = Completed_Module
+      fields = '__all__'
+
+class ModuleCompleteSerializer(serializers.ModelSerializer):
+  class Meta:
+    model = Module
+    fields = ['id']
+
+class CompletedModuleReadSerializer(serializers.ModelSerializer):
+    module_complete = ModuleCompleteSerializer()
+    student = StudentSerializer()
+    class Meta:
+      model = Completed_Module
+      fields = ['module_complete', 'student']
