@@ -18,6 +18,7 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
 
     def post(self, request):
+        print(request.data)
         # Pass the request data to the serializer to validate it
         if (request.data['userType'] == 'is_student'):
             request.data['credentials']['is_student'] = True
