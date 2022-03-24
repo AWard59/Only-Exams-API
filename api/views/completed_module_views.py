@@ -12,7 +12,7 @@ class CompletedModuleView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = CompletedModuleSerializer
 
-    def get(self, request):
+    def get(self, request, pk):
         """Index request"""
         completed_module = Completed_Module.objects.filter(
             student=request.user.id)

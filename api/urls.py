@@ -28,6 +28,7 @@ urlpatterns = [
     path('courses/<int:pk>/enrol/', EnrolledCourseView.as_view(), name='enrol_course'),
     path('courses/enrolled/', EnrolledCourseView.as_view(), name='enrolled_courses' ),
     path('courses/modules/<int:pk>/complete/', CompletedModuleView.as_view(), name='complete-module'),
+    path('courses/<int:pk>/modules/completed/', CompletedModuleView.as_view(), name='view-completed-modules'),
     path('courses/<int:pk>/', CourseDetailViewStudent.as_view(), name='enrolled-course-detail'),
     # Generic views
     path('courses/', CourseView.as_view(), name='courses'),
