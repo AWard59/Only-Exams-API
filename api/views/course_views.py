@@ -80,3 +80,17 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({'course': serializer.data})
         # If the data is not valid, return a response with the errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CourseViewStudent(generics.ListCreateAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = CourseSerializer
+
+    def get(self, request):
+        """Index request"""
+        # Get all the mangos:
+        # mangos = Mango.objects.all()
+        # Filter the mangos by owner, so you can only see your owned mangos
+        courses = Course.objects.all()
+        # Run the data through the serializer
+        serializer = CourseSerializer(courses, many=True).data
+        return Response({ 'courses': serializer })
