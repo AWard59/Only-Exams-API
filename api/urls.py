@@ -1,7 +1,7 @@
 from django.urls import path
 
 from .views.user_views import SignUpView, SignInView, SignOutView, ChangePasswordView, UpdateProfileView, TutorView
-from .views.course_views import CourseView, CourseDetailView, CourseViewStudent
+from .views.course_views import CourseView, CourseDetailView, CourseViewStudent, CourseDetailViewStudent
 from .views.module_views import ModuleView, ModuleDetailView
 from .views.assigned_tutor_views import AssignedTutorsView
 from .views.enrolled_course_views import EnrolledCourseView
@@ -28,6 +28,7 @@ urlpatterns = [
     path('courses/<int:pk>/enrol/', EnrolledCourseView.as_view(), name='enrol_course'),
     path('courses/enrolled/', EnrolledCourseView.as_view(), name='enrolled_courses' ),
     path('courses/modules/<int:pk>/complete/', CompletedModuleView.as_view(), name='complete-module'),
+    path('courses/<int:pk>/', CourseDetailViewStudent.as_view(), name='enrolled-course-detail'),
     # Generic views
     path('courses/', CourseView.as_view(), name='courses'),
     path('courses/<int:pk>/', CourseDetailView.as_view(), name='course_detail'),
