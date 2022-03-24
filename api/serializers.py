@@ -126,7 +126,6 @@ class ModuleCompleteSerializer(serializers.ModelSerializer):
 
 class CompletedModuleReadSerializer(serializers.ModelSerializer):
     module_complete = ModuleCompleteSerializer()
-    student = StudentSerializer()
     class Meta:
       model = Completed_Module
-      fields = ['module_complete', 'student']
+      fields = ['module_complete']
