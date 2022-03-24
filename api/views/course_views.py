@@ -14,9 +14,7 @@ class CourseView(generics.ListCreateAPIView):
 
     def get(self, request):
         """Index request"""
-        # Get all the mangos:
-        # mangos = Mango.objects.all()
-        # Filter the mangos by owner, so you can only see your owned mangos
+        # Filter the courses by owner, so you can only see your owned courses
         courses = Course.objects.filter(owner=request.user.id)
         # Run the data through the serializer
         serializer = CourseSerializer(courses, many=True).data
@@ -26,37 +24,23 @@ class CourseView(generics.ListCreateAPIView):
         """Create request"""
         # Add user to request data object
         request.data['course']['owner'] = request.user.id
-        # Serialize/create mango
+        # Serialize/create course
         serializer = CourseSerializer(data=request.data['course'])
-        # If the mango data is valid according to our serializer...
+        # If the course data is valid according to our serializer...
         if serializer.is_valid():
-            # Save the created mango & send a response
+            # Save the created course & send a response
             serializer.save()
             return Response({ 'course': serializer.data }, status=status.HTTP_201_CREATED)
         # If the data is not valid, return a response with the errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-class CourseStudentView(generics.ListCreateAPIView):
-    permission_classes = (IsAuthenticated,)
-    serializer_class = CourseSerializer
-
-    def get(self, request):
-        """Index request"""
-        # Get all the mangos:
-        # mangos = Mango.objects.all()
-        # Filter the mangos by owner, so you can only see your owned mangos
-        courses = Course.objects.all()
-        # Run the data through the serializer
-        serializer = CourseSerializer(courses, many=True).data
-        return Response({'courses': serializer})
-
 class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes=(IsAuthenticated,)
     def get(self, request, pk):
         """Show request"""
-        # Locate the mango to show
+        # Locate the course to show
         course = get_object_or_404(Course, pk=pk)
-        # Only want to show owned mangos?
+        # Only want to show owned courses?
         if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
 
@@ -66,9 +50,9 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, pk):
         """Delete request"""
-        # Locate mango to delete
+        # Locate course to delete
         course = get_object_or_404(Course, pk=pk)
-        # Check the mango's owner against the user making this request
+        # Check the course's owner against the user making this request
         if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
         # Only delete if the user owns the  mango
@@ -77,10 +61,9 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
 
     def partial_update(self, request, pk):
         """Update Request"""
-        # Locate Mango
-        # get_object_or_404 returns a object representation of our Mango
+        # get_object_or_404 returns a object representation of our course
         course = get_object_or_404(Course, pk=pk)
-        # Check the mango's owner against the user making this request
+        # Check the course's owner against the user making this request
         if request.user != course.owner:
             raise PermissionDenied('Unauthorized, you do not own this mango')
 
@@ -94,3 +77,23 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Response({'course': serializer.data})
         # If the data is not valid, return a response with the errors
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class CourseViewStudent(generics.ListCreateAPIView):
+    permission_classes=(IsAuthenticated,)
+    serializer_class = CourseSerializer
+
+    def get(self, request):
+        """Index request"""
+        courses = Course.objects.all()
+        # Run the data through the serializer
+        serializer = CourseSerializer(courses, many=True).data
+        return Response({ 'courses': serializer })
+
+class CourseDetailViewStudent(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes=(IsAuthenticated,)
+    def get(self, request, pk):
+        """Show request"""
+        course = get_object_or_404(Course, pk=pk)
+        # Run the data through the serializer so it's formatted
+        serializer = CourseSerializer(course).data
+        return Response({'course': serializer})
