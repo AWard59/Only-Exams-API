@@ -4,7 +4,7 @@ from .views.user_views import SignUpView, SignInView, SignOutView, ChangePasswor
 from .views.course_views import CourseView, CourseDetailView, CourseViewStudent, CourseDetailViewStudent
 from .views.module_views import ModuleView, ModuleDetailView
 from .views.assigned_tutor_views import AssignedTutorsView, CourseViewTutor
-from .views.enrolled_course_views import EnrolledCourseView
+from .views.enrolled_course_views import EnrolledCourseView, EnrolledStudentView
 from .views.completed_module_views import CompletedModuleView
 
 urlpatterns = [
@@ -25,6 +25,7 @@ urlpatterns = [
     path('tutors/assign/', AssignedTutorsView.as_view(), name='tutors-assign'),
     # Tutor views
     path('courses/assigned/', CourseViewTutor.as_view(), name='courses-assigned'),
+    path('courses/<int:pk>/enrolled/', EnrolledStudentView.as_view(), name='enrolled_students'),
     # Student views
     path('courses/available/', CourseViewStudent.as_view(), name='courses-available'),
     path('courses/<int:pk>/enrol/', EnrolledCourseView.as_view(), name='enrol_course'),

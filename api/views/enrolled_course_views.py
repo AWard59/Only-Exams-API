@@ -26,6 +26,17 @@ class EnrolledCourseView(generics.ListCreateAPIView):
             return Response({'enrolled_courses': serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class EnrolledStudentView(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = EnrolledCourseSerializer
+
+    def get(self, request, pk):
+        """Index request"""
+        enrolled_students = Enrolled_Course.objects.filter(
+            course=pk)
+        serializer = EnrolledCourseReadSerializer(
+            enrolled_students, many=True).data
+        return Response({'enrolled_students': serializer})
 
 class EnrolledCourseDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)

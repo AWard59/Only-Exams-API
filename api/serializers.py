@@ -99,7 +99,7 @@ class AssignedTutorReadSerializer(serializers.ModelSerializer):
 class StudentSerializer(serializers.ModelSerializer):
     class Meta:
       model = User
-      fields = ['id']
+      fields = ['id', 'email']
 
 class EnrolledCourseSerializer(serializers.ModelSerializer):
     class Meta:
