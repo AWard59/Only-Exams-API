@@ -97,3 +97,4 @@ class CourseDetailViewStudent(generics.RetrieveUpdateDestroyAPIView):
         # Run the data through the serializer so it's formatted
         serializer = CourseSerializer(course).data
         return Response({'course': serializer})
+

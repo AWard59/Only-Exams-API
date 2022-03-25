@@ -28,6 +28,16 @@ class AssignedTutorsView(generics.ListCreateAPIView):
             return Response({'assigned_tutors': serializer.data}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+class CourseViewTutor(generics.ListCreateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = AssignedTutorSerializer
+
+    def get(self, request):
+        """Index request"""
+        courses = Assigned_Tutor.objects.filter(tutor=request.user.id)
+        # Run the data through the serializer
+        serializer = AssignedTutorReadSerializer(courses, many=True).data
+        return Response({'courses': serializer})
 
 class AssignedTutorsDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (IsAuthenticated,)
