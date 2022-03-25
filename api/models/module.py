@@ -13,6 +13,7 @@ class Module(models.Model):
   )
   name = models.CharField(max_length=100)
   content = models.TextField()
+  completed = models.CharField(max_length=100, default="")
 
   completed_module = models.ManyToManyField('User', through=Completed_Module, through_fields=(
       'module_complete', 'student'), related_name='module_students', blank=True)
@@ -22,7 +23,7 @@ class Module(models.Model):
     return f"{self.name} in {self.course}"
 
   def as_dict(self):
-    """Returns dictionary version of Mango models"""
+    """Returns dictionary version of module models"""
     return {
         'id': self.id,
         'course': self.course,

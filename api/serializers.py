@@ -21,7 +21,7 @@ class CourseAssignedTutorsSerializer(CourseSerializer):
 class ModuleSerializer(serializers.ModelSerializer):
     class Meta:
         model = Module
-        fields = ('id', 'course', 'name', 'content')
+        fields = ('id', 'course', 'name', 'content', 'completed')
 
 # User Serializers
 class UserSerializer(serializers.ModelSerializer):
