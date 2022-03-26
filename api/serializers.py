@@ -34,8 +34,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('id', 'email', 'password', 'first_name', 'last_name', 'is_student', 'is_tutor', 'is_author')
         extra_kwargs = {'password': {'write_only': True, 'min_length': 5}}
-        first_name = serializers.CharField(max_length=100)
-        last_name = serializers.CharField(max_length=100)
 
     # This create method will be used for model creation
     def create(self, validated_data):
@@ -72,10 +70,13 @@ class ChangePasswordSerializer(serializers.Serializer):
     old = serializers.CharField(required=True)
     new = serializers.CharField(required=True)
 
-class UpdateProfileSerializer(serializers.Serializer):
-    model = get_user_model()
-    first_name = serializers.CharField(max_length=100)
-    last_name = serializers.CharField(max_length=100)
+class UpdateProfileSerializer(serializers.ModelSerializer):
+    # first_name = serializers.CharField(max_length=100)
+    # last_name = serializers.CharField(max_length=100)
+    user = UserSerializer
+    class Meta:
+        model = User
+        fields = ('first_name', 'last_name')
 
 # Assign Tutor Serializers
 class TutorSerializer(serializers.ModelSerializer):

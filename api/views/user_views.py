@@ -18,7 +18,6 @@ class SignUpView(generics.CreateAPIView):
     serializer_class = UserRegisterSerializer
 
     def post(self, request):
-        print(request.data)
         # Pass the request data to the serializer to validate it
         if (request.data['userType'] == 'is_student'):
             request.data['credentials']['is_student'] = True
@@ -76,7 +75,9 @@ class SignInView(generics.CreateAPIView):
                         'token': user.get_auth_token(),
                         'isAuthor': user.is_author,
                         'isTutor': user.is_tutor,
-                        'isStudent': user.is_student
+                        'isStudent': user.is_student,
+                        'firstName': user.first_name,
+                        'lastName': user.last_name
                     }
                 })
             else:
@@ -116,12 +117,21 @@ class UpdateProfileView(generics.UpdateAPIView):
     permission_classes = (IsAuthenticated,)
     serializer_class = UserSerializer
 
-    # def partial_update(self, request):
-
     def get(self, request):
         """Show request"""
         user = request.user
-        return Response({ 'user.id': user.id, 'user.email': user.email, 'user.first_name': user.first_name, 'user.last_name': user.last_name})
+        return Response({ 'id': user.id, 'email': user.email, 'first_name': user.first_name, 'last_name': user.last_name})
+
+    def partial_update(self, request):
+        """Update Request"""
+        user = request.user
+        # Validate updates with serializer
+        serializer = UpdateProfileSerializer(user, data=request.data['userData'], partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'user': serializer.data})
+        # If the data is not valid, return a response with the errors
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class TutorView(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated,)

@@ -55,8 +55,4 @@ No currently known issues as of this commit.
 #### Features I want to implement:-
 
 - Upload Course Images
-- Visualize Module Complete
 - Markdown Module Content
-- Tutor Edit Modules
-- Tutor see enrolled students
-- User First & Last
