@@ -5,6 +5,8 @@ Authors have control of the courses and can create and edit, then assign tutors.
 Tutors can edit modules, and see enrolled students per course.
 Students enrol in the courses and complete the modules.
 
+All courses and module content can be written in Markdown for a better user experience.
+
 ## Important Links
 
 - [Deployed Client](https://award59.github.io/Only-Exams-Client/)
@@ -55,4 +57,3 @@ No currently known issues as of this commit.
 #### Features I want to implement:-
 
 - Upload Course Images
-- Markdown Module Content

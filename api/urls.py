@@ -32,7 +32,7 @@ urlpatterns = [
     path('courses/enrolled/', EnrolledCourseView.as_view(), name='enrolled_courses' ),
     path('courses/modules/<int:pk>/complete/', CompletedModuleView.as_view(), name='complete-module'),
     path('courses/<int:pk>/modules/completed/', CompletedModuleView.as_view(), name='view-completed-modules'),
-    path('courses/<int:pk>/', CourseDetailViewStudent.as_view(), name='enrolled-course-detail'),
+    path('courses/<int:pk>/view/', CourseDetailViewStudent.as_view(), name='enrolled-course-detail'),
     # Generic views
     path('courses/<int:pk>/', CourseDetailView.as_view(), name='course_detail'),
     path('courses/<int:pk>/modules/', ModuleView.as_view(), name='view-modules'),
