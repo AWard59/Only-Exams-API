@@ -1,6 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics, status
 from django.shortcuts import get_object_or_404
 
@@ -11,6 +12,7 @@ from ..serializers import CourseSerializer
 class CourseView(generics.ListCreateAPIView):
     permission_classes=(IsAuthenticated,)
     serializer_class = CourseSerializer
+    parser_classes = (MultiPartParser, FormParser)
 
     def get(self, request):
         """Index request"""
@@ -20,12 +22,14 @@ class CourseView(generics.ListCreateAPIView):
         serializer = CourseSerializer(courses, many=True).data
         return Response({ 'courses': serializer })
 
-    def post(self, request):
+    def post(self, request, format=None):
         """Create request"""
         # Add user to request data object
-        request.data['course']['owner'] = request.user.id
+        print('req', request.data)
+        request.data['owner'] = request.user.id
         # Serialize/create course
-        serializer = CourseSerializer(data=request.data['course'])
+        serializer = CourseSerializer(data=request.data)
+        print('serializer', serializer)
         # If the course data is valid according to our serializer...
         if serializer.is_valid():
             # Save the created course & send a response
@@ -97,4 +101,3 @@ class CourseDetailViewStudent(generics.RetrieveUpdateDestroyAPIView):
         # Run the data through the serializer so it's formatted
         serializer = CourseSerializer(course).data
         return Response({'course': serializer})
-

@@ -172,6 +172,10 @@ USE_TZ = False
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
+# Media Files
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL = '/media/'
+
 # Use the custom user model as the auth user for the admin view
 AUTH_USER_MODEL = 'api.User'
 

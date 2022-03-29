@@ -10,6 +10,7 @@ class Course(models.Model):
   # https://docs.djangoproject.com/en/3.2/ref/models/fields/
   name = models.CharField(max_length=100)
   description = models.CharField(max_length=255)
+  image = models.ImageField(blank=True, null=True, upload_to='images/')
   owner = models.ForeignKey(
       get_user_model(),
       on_delete=models.CASCADE
