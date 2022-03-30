@@ -25,11 +25,11 @@ class CourseView(generics.ListCreateAPIView):
     def post(self, request, format=None):
         """Create request"""
         # Add user to request data object
-        print('req', request.data)
+        request.data._mutable = True
         request.data['owner'] = request.user.id
+        request.data._mutable = False
         # Serialize/create course
         serializer = CourseSerializer(data=request.data)
-        print('serializer', serializer)
         # If the course data is valid according to our serializer...
         if serializer.is_valid():
             # Save the created course & send a response
