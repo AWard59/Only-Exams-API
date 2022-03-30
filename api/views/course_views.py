@@ -44,10 +44,6 @@ class CourseDetailView(generics.RetrieveUpdateDestroyAPIView):
         """Show request"""
         # Locate the course to show
         course = get_object_or_404(Course, pk=pk)
-        # Only want to show owned courses?
-        if request.user != course.owner:
-            raise PermissionDenied('Unauthorized, you do not own this mango')
-
         # Run the data through the serializer so it's formatted
         serializer = CourseSerializer(course).data
         return Response({'course': serializer})
