@@ -56,4 +56,4 @@ No currently known issues as of this commit.
 
 #### Features I want to implement:-
 
-- Upload Course Images
+Module Completion % and Result

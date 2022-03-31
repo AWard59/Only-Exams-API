@@ -93,3 +93,6 @@ ENV/
 
 # client folder
 capstone-project-client/
+
+# local images
+media/images/
