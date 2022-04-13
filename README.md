@@ -25,7 +25,6 @@ All courses and module content can be written in Markdown for a better user expe
 ![Add Course](https://i.imgur.com/VjMT25W.png)
 ![Course Edit](https://i.imgur.com/YvzetRb.png)
 
-
 ## Planning Story
 
 I began planning the project with the wire frames user stories. I already had an idea of how I wanted the application to look and function. I created an ERD and build the backend from there.
@@ -58,4 +57,4 @@ No currently known issues as of this commit.
 
 Module Completion % and Result
 Live Version image upload and store
-Module testes
+Module tests
